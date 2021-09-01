@@ -9,7 +9,7 @@ class User:
         self.id = id
         self.password = password
 
-    def check_password(self, password):
+    def check_password(self, password: str) -> bool:
         if self.password == password:
             return True
         else:
@@ -24,7 +24,7 @@ def insert_user(user: User, df: pd.DataFrame) -> pd.DataFrame:
 
 
 # Checks if ID is in DataFrame
-def check_id(id, df):
+def check_id(id: str, df: pd.DataFrame) -> bool:
     if id in df["ID"].tolist():
         return True
     else:
@@ -32,9 +32,11 @@ def check_id(id, df):
 
 
 # Return user from DataFrame
-def return_user(id, df):
-    user_rown = df.loc[df.index[df["ID"] == "id"]]
-    user = User(user_rown["NAME"], user_rown["ID"], user_rown["PASSWORD"])
+def return_user(id: str, df: pd.DataFrame) -> User:
+    user_rown = df.where(df['ID'] == id)
+    user_rown = user_rown.dropna()
+    user_rown = user_rown.values.tolist()
+    user = User(user_rown[0][1], user_rown[0][0], user_rown[0][2])
     return user
 
 
@@ -46,7 +48,9 @@ def main() -> int:
     user2 = User("Carolina", "camposka88", "carol1812")
     df = insert_user(user1, df)
     df = insert_user(user2, df)
-    print(df)
+    user3 = return_user("leobbs89", df)
+    user4 = return_user('camposka88', df)
+
     return 0
 
 
