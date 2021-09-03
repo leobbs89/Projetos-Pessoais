@@ -1,4 +1,29 @@
 import pandas as pd
+from PyQt5 import QtCore, QtGui, QtWidgets
+from GUI2 import Ui_MainWindow
+import sys
+
+
+class User_Interface(Ui_MainWindow):
+    """Creates User interface"""
+
+    def __init__(self, window, df):
+        self.setupUi(window)
+        self.df = df
+        self.pushButton.clicked.connect(self.button_pressed)
+
+    def button_pressed(self):
+        """Checks login and password"""
+        password = self.password_line.text()
+        id = self.id_line.text()
+        if check_id(id,self.df) :
+            user = return_user(id,self.df)
+            if user.check_password(password):
+                print("Password correct")
+            else:
+                print("Password incorrect")
+        else:
+            print("ID not found")
 
 
 class User:
@@ -48,6 +73,11 @@ def main() -> int:
     user2 = User("Carolina", "camposka88", "carol1812")
     df = insert_user(user1, df)
     df = insert_user(user2, df)
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = User_Interface(MainWindow,df)
+    MainWindow.show()
+    sys.exit(app.exec_())
     return 0
 
 
