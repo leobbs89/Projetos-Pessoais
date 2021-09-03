@@ -1,5 +1,6 @@
 import pandas as pd
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
 from GUI2 import Ui_MainWindow
 import sys
 
@@ -19,12 +20,18 @@ class User_Interface(Ui_MainWindow):
         if check_id(id,self.df) :
             user = return_user(id,self.df)
             if user.check_password(password):
-                print("Password correct")
+                self.show_poup("Message","Password Correct")
             else:
-                print("Password incorrect")
+                self.show_poup("Message", "Password incorrect")
         else:
-            print("ID not found")
+            self.show_poup("Message","User not found")
 
+    def show_poup(self,title,text):
+        msg = QMessageBox()
+        msg.setWindowTitle(title)
+        msg.setText(text)
+
+        x = msg.exec_()
 
 class User:
     """Maintain user information"""
@@ -66,7 +73,7 @@ def return_user(id: str, df: pd.DataFrame) -> User:
 
 
 # MAIN FUNCTION
-def main() -> int:
+def main():
     # Create DataFrame
     df = pd.DataFrame(columns=["NAME", "ID", "PASSWORD"])
     user1 = User("Leandro", "leobbs89", "ima450")
@@ -78,7 +85,7 @@ def main() -> int:
     ui = User_Interface(MainWindow,df)
     MainWindow.show()
     sys.exit(app.exec_())
-    return 0
+
 
 
 if __name__ == "__main__":
