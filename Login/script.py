@@ -4,7 +4,7 @@ import pandas as pd
 class User:
     """Maintain user information"""
 
-    def __init__(self, name, id, password):
+    def __init__(self, name: str, id: str, password: str):
         self.name = name
         self.id = id
         self.password = password
@@ -48,9 +48,6 @@ def main() -> int:
     user2 = User("Carolina", "camposka88", "carol1812")
     df = insert_user(user1, df)
     df = insert_user(user2, df)
-    user3 = return_user("leobbs89", df)
-    user4 = return_user('camposka88', df)
-
     return 0
 
 
