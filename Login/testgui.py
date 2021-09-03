@@ -1,27 +1,19 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from GUI2 import Ui_MainWindow
 import sys
 
+class TestWindow(Ui_MainWindow):
+    def __init__(self, window):
+        self.setupUi(window)
+        self.pushButton.clicked.connect(self.button_pressed)
 
-from LOGIN_GUI import Ui_Dialog
-
-class TestWindow(Ui_Dialog):
-    def __init__(self):
-        super(TestWindow,self).__init__()
-        self.pushButton.clicked.connect(self.pushButton.buttonpressed)
-
-    def buttonpressed(self):
-        password = self.Password_Line.text()
-        id = self.ID_line.text()
+    def button_pressed(self):
+        password = self.password_line.text()
+        id = self.id_line.text()
         print(f'Id = {id} password = {password}')
 
-
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
+app = QtWidgets.QApplication(sys.argv)
+MainWindow = QtWidgets.QMainWindow()
+ui = TestWindow(MainWindow)
+MainWindow.show()
+sys.exit(app.exec_())
