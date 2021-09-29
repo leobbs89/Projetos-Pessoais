@@ -1,11 +1,12 @@
 import pandas as pd
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from GUI2 import Ui_MainWindow
 import sys
 
 
-class User_Interface(Ui_MainWindow):
+
+class UserInterface(Ui_MainWindow):
     """Creates User interface"""
 
     def __init__(self, window, df):
@@ -17,21 +18,15 @@ class User_Interface(Ui_MainWindow):
         """Checks login and password"""
         password = self.password_line.text()
         id = self.id_line.text()
-        if check_id(id,self.df) :
-            user = return_user(id,self.df)
+        if check_id(id, self.df):
+            user = return_user(id, self.df)
             if user.check_password(password):
-                self.show_poup("Message","Password Correct")
+                show_popup("Message", "Password Correct")
             else:
-                self.show_poup("Message", "Password incorrect")
+                show_popup("Message", "Password incorrect")
         else:
-            self.show_poup("Message","User not found")
+            show_popup("Message", "User not found")
 
-    def show_poup(self,title,text):
-        msg = QMessageBox()
-        msg.setWindowTitle(title)
-        msg.setText(text)
-
-        x = msg.exec_()
 
 class User:
     """Maintain user information"""
@@ -46,6 +41,14 @@ class User:
             return True
         else:
             return False
+
+
+def show_popup(title, text):
+    msg = QMessageBox()
+    msg.setWindowTitle(title)
+    msg.setText(text)
+
+    x = msg.exec_()
 
 
 # Insert user in DataFrame
@@ -65,10 +68,10 @@ def check_id(id: str, df: pd.DataFrame) -> bool:
 
 # Return user from DataFrame
 def return_user(id: str, df: pd.DataFrame) -> User:
-    user_rown = df.where(df['ID'] == id)
-    user_rown = user_rown.dropna()
-    user_rown = user_rown.values.tolist()
-    user = User(user_rown[0][1], user_rown[0][0], user_rown[0][2])
+    user_rows = df.where(df['ID'] == id)
+    user_rows = user_rows.dropna()
+    user_rows = user_rows.values.tolist()
+    user = User(user_rows[0][1], user_rows[0][0], user_rows[0][2])
     return user
 
 
@@ -81,11 +84,10 @@ def main():
     df = insert_user(user1, df)
     df = insert_user(user2, df)
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = User_Interface(MainWindow,df)
-    MainWindow.show()
+    main_window = QtWidgets.QMainWindow()
+    ui = UserInterface(main_window, df)
+    main_window.show()
     sys.exit(app.exec_())
-
 
 
 if __name__ == "__main__":
