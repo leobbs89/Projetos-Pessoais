@@ -2,8 +2,8 @@ import pandas as pd
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from GUI2 import Ui_MainWindow
+from new_user_ui import Ui_New_user_window
 import sys
-
 
 
 class UserInterface(Ui_MainWindow):
@@ -12,9 +12,10 @@ class UserInterface(Ui_MainWindow):
     def __init__(self, window, df):
         self.setupUi(window)
         self.df = df
-        self.pushButton.clicked.connect(self.button_pressed)
+        self.pushButton.clicked.connect(self.ok_button_pressed)
+        self.new_user_button.clicked.connect(self.new_user_button_pressed)
 
-    def button_pressed(self):
+    def ok_button_pressed(self):
         """Checks login and password"""
         password = self.password_line.text()
         id = self.id_line.text()
@@ -26,6 +27,29 @@ class UserInterface(Ui_MainWindow):
                 show_popup("Message", "Password incorrect")
         else:
             show_popup("Message", "User not found")
+
+    def new_user_button_pressed(self):
+        """Opens new user window"""
+        self.window2 = QtWidgets.QMainWindow()
+        self.ui = NewUserInterface(self.window2,self.df)
+        self.window2.show()
+
+class NewUserInterface(Ui_New_user_window):
+    """Creates User interface"""
+
+    def __init__(self,window, df):
+        self.setupUi(window)
+        self.df = df
+        self.create_button.clicked.connect(self.button_pressed)
+
+    def button_pressed(self):
+        """Creates new user in dataframe"""
+        password = self.password_line.text()
+        id = self.user_line.text()
+        name = 'Generic'
+        new_user = User(name, id, password)
+        df = insert_user(new_user, self.df)
+
 
 
 class User:

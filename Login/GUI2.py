@@ -14,11 +14,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(227, 166)
+        MainWindow.resize(234, 194)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 20, 211, 131))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 20, 211, 144))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -39,6 +39,9 @@ class Ui_MainWindow(object):
         self.pushButton.setMouseTracking(False)
         self.pushButton.setObjectName("pushButton")
         self.verticalLayout.addWidget(self.pushButton)
+        self.new_user_button = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.new_user_button.setObjectName("new_user_button")
+        self.verticalLayout.addWidget(self.new_user_button)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -50,3 +53,4 @@ class Ui_MainWindow(object):
         self.login_label.setText(_translate("MainWindow", "Login"))
         self.password_label.setText(_translate("MainWindow", "Password"))
         self.pushButton.setText(_translate("MainWindow", "OK"))
+        self.new_user_button.setText(_translate("MainWindow", "New user"))
