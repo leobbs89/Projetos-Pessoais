@@ -9,9 +9,8 @@ import sys
 class UserInterface(Ui_MainWindow):
     """Creates User interface"""
 
-    def __init__(self, window, df):
+    def __init__(self, window):
         self.setupUi(window)
-        self.df = df
         self.pushButton.clicked.connect(self.ok_button_pressed)
         self.new_user_button.clicked.connect(self.new_user_button_pressed)
 
@@ -19,8 +18,8 @@ class UserInterface(Ui_MainWindow):
         """Checks login and password"""
         password = self.password_line.text()
         id = self.id_line.text()
-        if check_id(id, self.df):
-            user = return_user(id, self.df)
+        if check_id(id):
+            user = return_user(id)
             if user.check_password(password):
                 show_popup("Message", "Password Correct")
             else:
@@ -31,25 +30,24 @@ class UserInterface(Ui_MainWindow):
     def new_user_button_pressed(self):
         """Opens new user window"""
         self.window2 = QtWidgets.QMainWindow()
-        self.ui = NewUserInterface(self.window2,self.df)
+        self.ui = NewUserInterface(self.window2)
         self.window2.show()
+
 
 class NewUserInterface(Ui_New_user_window):
     """Creates User interface"""
 
-    def __init__(self,window, df):
+    def __init__(self, window):
         self.setupUi(window)
-        self.df = df
         self.create_button.clicked.connect(self.button_pressed)
 
     def button_pressed(self):
         """Creates new user in dataframe"""
         password = self.password_line.text()
         id = self.user_line.text()
-        name = 'Generic'
+        name = self.name_line.text()
         new_user = User(name, id, password)
-        df = insert_user(new_user, self.df)
-
+        insert_user(new_user)
 
 
 class User:
@@ -76,14 +74,16 @@ def show_popup(title, text):
 
 
 # Insert user in DataFrame
-def insert_user(user: User, df: pd.DataFrame) -> pd.DataFrame:
+def insert_user(user: User):
+    df = open_dataframe()
     df = df.append({"NAME": user.name, "ID": user.id, "PASSWORD": user.password}, ignore_index=True, sort=True)
     df = df.sort_values("NAME")
-    return df
+    save_dataframe(df)
 
 
 # Checks if ID is in DataFrame
-def check_id(id: str, df: pd.DataFrame) -> bool:
+def check_id(id: str) -> bool:
+    df = open_dataframe()
     if id in df["ID"].tolist():
         return True
     else:
@@ -91,7 +91,8 @@ def check_id(id: str, df: pd.DataFrame) -> bool:
 
 
 # Return user from DataFrame
-def return_user(id: str, df: pd.DataFrame) -> User:
+def return_user(id: str) -> User:
+    df = open_dataframe()
     user_rows = df.where(df['ID'] == id)
     user_rows = user_rows.dropna()
     user_rows = user_rows.values.tolist()
@@ -99,17 +100,24 @@ def return_user(id: str, df: pd.DataFrame) -> User:
     return user
 
 
+def open_dataframe():
+    df = pd.read_csv('database.csv')
+    return df
+
+
+def save_dataframe(df):
+    df.to_csv('database.csv', index=False)
+
+
 # MAIN FUNCTION
 def main():
     # Create DataFrame
     df = pd.DataFrame(columns=["NAME", "ID", "PASSWORD"])
-    user1 = User("Leandro", "leobbs89", "ima450")
-    user2 = User("Carolina", "camposka88", "carol1812")
-    df = insert_user(user1, df)
-    df = insert_user(user2, df)
+    save_dataframe(df)
+    #Runs main window
     app = QtWidgets.QApplication(sys.argv)
     main_window = QtWidgets.QMainWindow()
-    ui = UserInterface(main_window, df)
+    ui = UserInterface(main_window)
     main_window.show()
     sys.exit(app.exec_())
 
